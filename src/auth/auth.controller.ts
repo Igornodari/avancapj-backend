@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, UseGuards, Request } from '@nestjs/common'
 import { AuthService } from './auth.service';
 import { FirebaseAuthGuard } from './firebase-auth.guard';
 
-@Controller('auth')
+@Controller('core/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
