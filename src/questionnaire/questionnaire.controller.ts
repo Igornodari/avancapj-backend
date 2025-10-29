@@ -3,7 +3,7 @@ import { QuestionnaireService } from './questionnaire.service';
 import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { QuestionnaireResponse } from './questionnaire.interface';
 
-@Controller('questionnaire')
+@Controller('core/questionnaire')
 export class QuestionnaireController {
   constructor(private questionnaireService: QuestionnaireService) {}
 
