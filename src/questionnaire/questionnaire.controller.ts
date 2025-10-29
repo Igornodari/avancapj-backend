@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, UseGuards, Request, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { QuestionnaireResponse } from './questionnaire.interface';
@@ -23,8 +32,11 @@ export class QuestionnaireController {
   ) {
     try {
       const userId = req.user.uid;
-      const profile = await this.questionnaireService.saveResponse(userId, body.responses);
-      
+      const profile = await this.questionnaireService.saveResponse(
+        userId,
+        body.responses,
+      );
+
       return {
         success: true,
         message: 'Questionário enviado com sucesso',
@@ -43,7 +55,7 @@ export class QuestionnaireController {
   async getUserProfile(@Request() req) {
     const userId = req.user.uid;
     const profile = await this.questionnaireService.getUserProfile(userId);
-    
+
     if (!profile) {
       throw new HttpException('Perfil não encontrado', HttpStatus.NOT_FOUND);
     }
@@ -55,8 +67,9 @@ export class QuestionnaireController {
   @UseGuards(FirebaseAuthGuard)
   async getQuestionnaireStatus(@Request() req) {
     const userId = req.user.uid;
-    const completed = await this.questionnaireService.hasCompletedQuestionnaire(userId);
-    
+    const completed =
+      await this.questionnaireService.hasCompletedQuestionnaire(userId);
+
     return {
       completed,
       userId,
@@ -68,7 +81,7 @@ export class QuestionnaireController {
   async getResponse(@Request() req) {
     const userId = req.user.uid;
     const response = await this.questionnaireService.getResponse(userId);
-    
+
     return response || { message: 'Nenhuma resposta encontrada' };
   }
 }

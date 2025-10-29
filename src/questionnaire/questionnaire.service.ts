@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Question, QuestionnaireResponse, UserProfile } from './questionnaire.interface';
+import {
+  Question,
+  QuestionnaireResponse,
+  UserProfile,
+} from './questionnaire.interface';
 
 @Injectable()
 export class QuestionnaireService {
@@ -10,12 +14,36 @@ export class QuestionnaireService {
       type: 'single',
       order: 1,
       options: [
-        { id: 'tech', text: 'Tecnologia', toolsAssociated: ['tool-dev', 'tool-analytics'] },
-        { id: 'commerce', text: 'Comércio', toolsAssociated: ['tool-inventory', 'tool-sales'] },
-        { id: 'services', text: 'Serviços', toolsAssociated: ['tool-scheduling', 'tool-crm'] },
-        { id: 'education', text: 'Educação', toolsAssociated: ['tool-lms', 'tool-content'] },
-        { id: 'health', text: 'Saúde', toolsAssociated: ['tool-scheduling', 'tool-records'] },
-        { id: 'finance', text: 'Financeiro', toolsAssociated: ['tool-accounting', 'tool-reports'] },
+        {
+          id: 'tech',
+          text: 'Tecnologia',
+          toolsAssociated: ['tool-dev', 'tool-analytics'],
+        },
+        {
+          id: 'commerce',
+          text: 'Comércio',
+          toolsAssociated: ['tool-inventory', 'tool-sales'],
+        },
+        {
+          id: 'services',
+          text: 'Serviços',
+          toolsAssociated: ['tool-scheduling', 'tool-crm'],
+        },
+        {
+          id: 'education',
+          text: 'Educação',
+          toolsAssociated: ['tool-lms', 'tool-content'],
+        },
+        {
+          id: 'health',
+          text: 'Saúde',
+          toolsAssociated: ['tool-scheduling', 'tool-records'],
+        },
+        {
+          id: 'finance',
+          text: 'Financeiro',
+          toolsAssociated: ['tool-accounting', 'tool-reports'],
+        },
         { id: 'other', text: 'Outro', toolsAssociated: [] },
       ],
     },
@@ -25,10 +53,26 @@ export class QuestionnaireService {
       type: 'single',
       order: 2,
       options: [
-        { id: 'solo', text: 'Autônomo/Freelancer', toolsAssociated: ['tool-basic'] },
-        { id: 'small', text: 'Pequena (1-10 funcionários)', toolsAssociated: ['tool-team'] },
-        { id: 'medium', text: 'Média (11-50 funcionários)', toolsAssociated: ['tool-team', 'tool-advanced'] },
-        { id: 'large', text: 'Grande (50+ funcionários)', toolsAssociated: ['tool-enterprise'] },
+        {
+          id: 'solo',
+          text: 'Autônomo/Freelancer',
+          toolsAssociated: ['tool-basic'],
+        },
+        {
+          id: 'small',
+          text: 'Pequena (1-10 funcionários)',
+          toolsAssociated: ['tool-team'],
+        },
+        {
+          id: 'medium',
+          text: 'Média (11-50 funcionários)',
+          toolsAssociated: ['tool-team', 'tool-advanced'],
+        },
+        {
+          id: 'large',
+          text: 'Grande (50+ funcionários)',
+          toolsAssociated: ['tool-enterprise'],
+        },
       ],
     },
     {
@@ -37,14 +81,42 @@ export class QuestionnaireService {
       type: 'multiple',
       order: 3,
       options: [
-        { id: 'customer-management', text: 'Gestão de Clientes', toolsAssociated: ['tool-crm'] },
-        { id: 'financial-control', text: 'Controle Financeiro', toolsAssociated: ['tool-accounting', 'tool-reports'] },
-        { id: 'project-management', text: 'Gestão de Projetos', toolsAssociated: ['tool-projects'] },
-        { id: 'inventory', text: 'Controle de Estoque', toolsAssociated: ['tool-inventory'] },
+        {
+          id: 'customer-management',
+          text: 'Gestão de Clientes',
+          toolsAssociated: ['tool-crm'],
+        },
+        {
+          id: 'financial-control',
+          text: 'Controle Financeiro',
+          toolsAssociated: ['tool-accounting', 'tool-reports'],
+        },
+        {
+          id: 'project-management',
+          text: 'Gestão de Projetos',
+          toolsAssociated: ['tool-projects'],
+        },
+        {
+          id: 'inventory',
+          text: 'Controle de Estoque',
+          toolsAssociated: ['tool-inventory'],
+        },
         { id: 'sales', text: 'Vendas', toolsAssociated: ['tool-sales'] },
-        { id: 'marketing', text: 'Marketing', toolsAssociated: ['tool-marketing'] },
-        { id: 'analytics', text: 'Análise de Dados', toolsAssociated: ['tool-analytics'] },
-        { id: 'automation', text: 'Automação de Processos', toolsAssociated: ['tool-automation'] },
+        {
+          id: 'marketing',
+          text: 'Marketing',
+          toolsAssociated: ['tool-marketing'],
+        },
+        {
+          id: 'analytics',
+          text: 'Análise de Dados',
+          toolsAssociated: ['tool-analytics'],
+        },
+        {
+          id: 'automation',
+          text: 'Automação de Processos',
+          toolsAssociated: ['tool-automation'],
+        },
       ],
     },
     {
@@ -53,10 +125,26 @@ export class QuestionnaireService {
       type: 'single',
       order: 4,
       options: [
-        { id: 'efficiency', text: 'Aumentar Eficiência', toolsAssociated: ['tool-automation'] },
-        { id: 'growth', text: 'Crescer o Negócio', toolsAssociated: ['tool-marketing', 'tool-sales'] },
-        { id: 'organization', text: 'Melhorar Organização', toolsAssociated: ['tool-projects', 'tool-crm'] },
-        { id: 'cost-reduction', text: 'Reduzir Custos', toolsAssociated: ['tool-accounting'] },
+        {
+          id: 'efficiency',
+          text: 'Aumentar Eficiência',
+          toolsAssociated: ['tool-automation'],
+        },
+        {
+          id: 'growth',
+          text: 'Crescer o Negócio',
+          toolsAssociated: ['tool-marketing', 'tool-sales'],
+        },
+        {
+          id: 'organization',
+          text: 'Melhorar Organização',
+          toolsAssociated: ['tool-projects', 'tool-crm'],
+        },
+        {
+          id: 'cost-reduction',
+          text: 'Reduzir Custos',
+          toolsAssociated: ['tool-accounting'],
+        },
       ],
     },
   ];
@@ -68,7 +156,10 @@ export class QuestionnaireService {
     return this.questions.sort((a, b) => a.order - b.order);
   }
 
-  async saveResponse(userId: string, responses: QuestionnaireResponse['responses']): Promise<UserProfile> {
+  async saveResponse(
+    userId: string,
+    responses: QuestionnaireResponse['responses'],
+  ): Promise<UserProfile> {
     const questionnaireResponse: QuestionnaireResponse = {
       userId,
       responses,
@@ -84,7 +175,10 @@ export class QuestionnaireService {
     return profile;
   }
 
-  private generateUserProfile(userId: string, responses: QuestionnaireResponse['responses']): UserProfile {
+  private generateUserProfile(
+    userId: string,
+    responses: QuestionnaireResponse['responses'],
+  ): UserProfile {
     const toolsSet = new Set<string>();
     let workArea = '';
     let businessType = '';
@@ -96,21 +190,27 @@ export class QuestionnaireService {
 
       if (question.id === 'q1') {
         // Ramo de atuação
-        const option = question.options?.find((opt) => opt.id === response.answer);
+        const option = question.options?.find(
+          (opt) => opt.id === response.answer,
+        );
         if (option) {
           workArea = option.text;
           option.toolsAssociated?.forEach((tool) => toolsSet.add(tool));
         }
       } else if (question.id === 'q2') {
         // Tamanho da empresa
-        const option = question.options?.find((opt) => opt.id === response.answer);
+        const option = question.options?.find(
+          (opt) => opt.id === response.answer,
+        );
         if (option) {
           businessType = option.text;
           option.toolsAssociated?.forEach((tool) => toolsSet.add(tool));
         }
       } else if (question.id === 'q3') {
         // Necessidades (múltipla escolha)
-        const answers = Array.isArray(response.answer) ? response.answer : [response.answer];
+        const answers = Array.isArray(response.answer)
+          ? response.answer
+          : [response.answer];
         answers.forEach((answerId) => {
           const option = question.options?.find((opt) => opt.id === answerId);
           if (option) {
@@ -120,7 +220,9 @@ export class QuestionnaireService {
         });
       } else if (question.id === 'q4') {
         // Objetivo principal
-        const option = question.options?.find((opt) => opt.id === response.answer);
+        const option = question.options?.find(
+          (opt) => opt.id === response.answer,
+        );
         if (option) {
           option.toolsAssociated?.forEach((tool) => toolsSet.add(tool));
         }

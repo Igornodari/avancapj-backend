@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Put, Body, UseGuards, Request, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  UseGuards,
+  Request,
+  Param,
+} from '@nestjs/common';
 import { UsersService, UserProfile } from './users.service';
 import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 
@@ -24,7 +33,8 @@ export class UsersController {
   @Put('profile')
   async updateProfile(
     @Request() req,
-    @Body() updateData: { clientType?: string; workArea?: string; name?: string }
+    @Body()
+    updateData: { clientType?: string; workArea?: string; name?: string },
   ): Promise<UserProfile> {
     return this.usersService.updateUserProfile(req.user.uid, updateData);
   }
@@ -32,7 +42,7 @@ export class UsersController {
   @Post('setup')
   async setupProfile(
     @Request() req,
-    @Body() setupData: { clientType: string; workArea: string }
+    @Body() setupData: { clientType: string; workArea: string },
   ): Promise<UserProfile> {
     return this.usersService.updateUserProfile(req.user.uid, setupData);
   }
@@ -42,4 +52,3 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 }
-

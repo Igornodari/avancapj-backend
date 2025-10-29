@@ -6,12 +6,16 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class FirebaseStrategy extends PassportStrategy(Strategy, 'firebase') {
   constructor(private configService: ConfigService) {
-    const jwtSecret = configService.get<string>('JWT_SECRET') || 'default-secret-key-change-in-production';
-    
+    const jwtSecret =
+      configService.get<string>('JWT_SECRET') ||
+      'default-secret-key-change-in-production';
+
     if (!jwtSecret || jwtSecret === 'default-secret-key-change-in-production') {
-      console.warn('⚠️  WARNING: Using default JWT_SECRET. Please set JWT_SECRET in .env file for production!');
+      console.warn(
+        '⚠️  WARNING: Using default JWT_SECRET. Please set JWT_SECRET in .env file for production!',
+      );
     }
-    
+
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -20,11 +24,10 @@ export class FirebaseStrategy extends PassportStrategy(Strategy, 'firebase') {
   }
 
   async validate(payload: any) {
-    return { 
-      uid: payload.sub, 
+    return {
+      uid: payload.sub,
       email: payload.email,
-      name: payload.name 
+      name: payload.name,
     };
   }
 }
-

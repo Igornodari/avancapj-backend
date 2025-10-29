@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { FirebaseAuthGuard } from './firebase-auth.guard';
 
@@ -38,4 +45,3 @@ export class AuthController {
     }
   }
 }
-
