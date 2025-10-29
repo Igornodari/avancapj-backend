@@ -18,9 +18,15 @@ export interface UserProfile {
 export class UsersService {
   private users: Map<string, UserProfile> = new Map();
 
-  async createOrUpdateUser(userData: { uid: string; email: string; name: string; clientType?: string; workArea?: string }): Promise<UserProfile> {
+  async createOrUpdateUser(userData: {
+    uid: string;
+    email: string;
+    name: string;
+    clientType?: string;
+    workArea?: string;
+  }): Promise<UserProfile> {
     const existingUser = this.users.get(userData.uid);
-    
+
     const user: UserProfile = {
       uid: userData.uid,
       email: userData.email,
@@ -43,7 +49,10 @@ export class UsersService {
     return this.users.get(uid) || null;
   }
 
-  async updateUserProfile(uid: string, updateData: Partial<UserProfile>): Promise<UserProfile> {
+  async updateUserProfile(
+    uid: string,
+    updateData: Partial<UserProfile>,
+  ): Promise<UserProfile> {
     const existingUser = this.users.get(uid);
     if (!existingUser) {
       throw new Error('Usuário não encontrado');
@@ -64,4 +73,3 @@ export class UsersService {
     return Array.from(this.users.values());
   }
 }
-

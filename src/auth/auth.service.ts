@@ -17,7 +17,7 @@ export class AuthService {
           name: 'Usuário de Teste',
         };
       }
-      
+
       const decodedToken = await admin.auth().verifyIdToken(token);
       return decodedToken;
     } catch (error) {
@@ -26,19 +26,19 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { 
-      email: user.email, 
+    const payload = {
+      email: user.email,
       sub: user.uid,
-      name: user.name || user.email 
+      name: user.name || user.email,
     };
-    
+
     return {
       access_token: this.jwtService.sign(payload),
       user: {
         uid: user.uid,
         email: user.email,
         name: user.name || user.email,
-      }
+      },
     };
   }
 
@@ -53,7 +53,7 @@ export class AuthService {
           emailVerified: true,
         };
       }
-      
+
       const userRecord = await admin.auth().getUser(uid);
       return {
         uid: userRecord.uid,
@@ -66,4 +66,3 @@ export class AuthService {
     }
   }
 }
-
