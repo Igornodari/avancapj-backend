@@ -11,10 +11,18 @@ import { FirebaseStrategy } from './firebase.strategy';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '24h' },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET') || 'default-secret-key-change-in-production';
+        
+        if (!secret || secret === 'default-secret-key-change-in-production') {
+          console.warn('⚠️  WARNING: Using default JWT_SECRET. Please set JWT_SECRET in .env file for production!');
+        }
+        
+        return {
+          secret,
+          signOptions: { expiresIn: '24h' },
+        };
+      },
       inject: [ConfigService],
     }),
   ],
