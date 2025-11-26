@@ -41,7 +41,7 @@ npm install
 Crie um arquivo `.env` na raiz do projeto. Para um passo a passo completo (incluindo o assistente do Firebase Hosting), consulte [docs/firebase-setup.md](docs/firebase-setup.md). Resumo rápido:
 
 1. Gere uma **Service Account** em **Configurações do Projeto → Contas de Serviço → Gerar nova chave** e baixe o JSON (não use o snippet Web com `apiKey`).
-2. Copie os campos do JSON para o `.env` (use o `.env.example` como base) **ou** defina `FIREBASE_SERVICE_ACCOUNT_JSON` com o JSON completo (ou caminho do arquivo) para evitar copiar campo a campo. Se preferir automatizar, rode `npx ts-node tools/generate-env-from-service-account.ts --input serviceAccount.json --output .env.local`.
+2. Copie os campos do JSON para o `.env` (use o `.env.example` como base) **ou** defina `FIREBASE_SERVICE_ACCOUNT_JSON` com o JSON completo (ou caminho do arquivo) para evitar copiar campo a campo.
 3. Cole a `private_key` em **uma única linha**. Se estiver copiando com quebras de linha, substitua-as por `\n` (sem aspas ao redor) para que o SDK consiga ler corretamente.
 
 Exemplo mínimo:

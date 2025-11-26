@@ -59,8 +59,6 @@ JWT_SECRET=seu-jwt-secret-aqui
 PORT=3000
 ```
 
-> Atalho: gere o bloco do `.env` automaticamente a partir do JSON executando `npx ts-node tools/generate-env-from-service-account.ts --input serviceAccount.json --output .env.local`. O script converte a `private_key` para o formato de linha única com `\n` e preenche todos os campos necessários.
-
 ## 5) Testar localmente
 1. Instale dependências e rode os testes:
    ```bash
