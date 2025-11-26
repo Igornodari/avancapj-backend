@@ -13,12 +13,31 @@ export class FirebaseService implements OnModuleInit {
       this.loadServiceAccountFromJson() ?? this.loadServiceAccountFromEnv();
 
     // Só inicializar se as credenciais estiverem configuradas corretamente
-    if (
-        serviceAccount?.projectId &&
-        serviceAccount.privateKey &&
-        serviceAccount.clientEmail &&
-        !serviceAccount.projectId.includes('test')
-    ) {
+    if (projectId && privateKey && clientEmail && !projectId.includes('test')) {
+      const sanitizedPrivateKey = privateKey
+        .trim()
+        .replace(/^"([\s\S]*)"$/u, '$1')
+        .replace(/^'([\s\S]*)'$/u, '$1')
+        .replace(/\\n/g, '\n');
+
+      const serviceAccount = {
+        type: 'service_account',
+        project_id: projectId,
+        private_key_id: this.configService.get<string>(
+          'FIREBASE_PRIVATE_KEY_ID',
+        ),
+        private_key: sanitizedPrivateKey,
+        client_email: clientEmail,
+        client_id: this.configService.get<string>('FIREBASE_CLIENT_ID'),
+        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_uri: 'https://oauth2.googleapis.com/token',
+        auth_provider_x509_cert_url:
+          'https://www.googleapis.com/oauth2/v1/certs',
+        client_x509_cert_url: this.configService.get<string>(
+          'FIREBASE_CLIENT_CERT_URL',
+        ),
+      };
+
       if (!admin.apps.length) {
         admin.initializeApp({
           credential: admin.credential.cert(
@@ -91,11 +110,7 @@ export class FirebaseService implements OnModuleInit {
     return JSON.parse(content);
   }
 
-  private toServiceAccount(raw: Record<string, string>):
-    | (Pick<admin.ServiceAccount, 'projectId' | 'privateKey' | 'clientEmail'> & {
-        [key: string]: unknown;
-      })
-    | null {
+  private toServiceAccount(raw: Record<string, string>) {
     if (!raw) {
       return null;
     }
