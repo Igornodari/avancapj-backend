@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as admin from 'firebase-admin';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private firebaseService: FirebaseService,
+  ) {}
 
   async validateFirebaseToken(token: string) {
     try {
+      const firebaseAuth = this.firebaseService.getAuth();
+
       // Se o Firebase não estiver inicializado, simular validação para desenvolvimento
-      if (!admin.apps.length) {
-        // Retornar um usuário de teste para desenvolvimento
+      if (!firebaseAuth) {
         return {
           uid: 'test-user-123',
           email: 'test@example.com',
@@ -18,7 +22,7 @@ export class AuthService {
         };
       }
 
-      const decodedToken = await admin.auth().verifyIdToken(token);
+      const decodedToken = await firebaseAuth.verifyIdToken(token);
       return decodedToken;
     } catch (error) {
       throw new Error('Token inválido');
@@ -44,8 +48,9 @@ export class AuthService {
 
   async getUserProfile(uid: string) {
     try {
+      const firebaseAuth = this.firebaseService.getAuth();
       // Se o Firebase não estiver inicializado, retornar dados de teste
-      if (!admin.apps.length) {
+      if (!firebaseAuth) {
         return {
           uid: uid,
           email: 'test@example.com',
@@ -54,7 +59,7 @@ export class AuthService {
         };
       }
 
-      const userRecord = await admin.auth().getUser(uid);
+      const userRecord = await firebaseAuth.getUser(uid);
       return {
         uid: userRecord.uid,
         email: userRecord.email,

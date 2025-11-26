@@ -5,9 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { FirebaseStrategy } from './firebase.strategy';
+import { FirebaseAuthGuard } from './firebase-auth.guard';
+import { FirebaseModule } from '../firebase/firebase.module';
 
 @Module({
   imports: [
+    FirebaseModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -31,7 +34,7 @@ import { FirebaseStrategy } from './firebase.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, FirebaseStrategy],
-  exports: [AuthService],
+  providers: [AuthService, FirebaseStrategy, FirebaseAuthGuard],
+  exports: [AuthService, FirebaseAuthGuard],
 })
 export class AuthModule {}
