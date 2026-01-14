@@ -8,7 +8,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private firebaseService: FirebaseService,
-  ) {}
+  ) { }
 
   async validateFirebaseToken(token: string) {
     const firebaseAuth = this.firebaseService.getAuth();
@@ -45,7 +45,7 @@ export class AuthService {
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
       user: {
         uid: user.uid,
         email: user.email,
