@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as admin from 'firebase-admin';
 import * as fs from 'fs';
 import * as path from 'path';
+import type { DecodedIdToken } from 'firebase-admin/auth';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -12,7 +15,8 @@ export class FirebaseService implements OnModuleInit {
     const serviceAccount =
       this.loadServiceAccountFromJson() ?? this.loadServiceAccountFromEnv();
 
-    // Só inicializar se as credenciais estiverem configuradas corretamente
+    const { projectId, privateKey, clientEmail } = serviceAccount || {};
+
     if (projectId && privateKey && clientEmail && !projectId.includes('test')) {
       const sanitizedPrivateKey = privateKey
         .trim()
@@ -20,7 +24,7 @@ export class FirebaseService implements OnModuleInit {
         .replace(/^'([\s\S]*)'$/u, '$1')
         .replace(/\\n/g, '\n');
 
-      const serviceAccount = {
+      const serviceAccountObj = {
         type: 'service_account',
         project_id: projectId,
         private_key_id: this.configService.get<string>(
@@ -41,9 +45,9 @@ export class FirebaseService implements OnModuleInit {
       if (!admin.apps.length) {
         admin.initializeApp({
           credential: admin.credential.cert(
-            serviceAccount as admin.ServiceAccount,
+            serviceAccountObj as admin.ServiceAccount,
           ),
-          databaseURL: `https://${serviceAccount.projectId}-default-rtdb.firebaseio.com`,
+          databaseURL: `https://${projectId}-default-rtdb.firebaseio.com`,
         });
       }
     } else {
@@ -51,6 +55,10 @@ export class FirebaseService implements OnModuleInit {
         'Firebase não inicializado - usando credenciais de teste. Configure as variáveis de ambiente do Firebase para usar a autenticação real.',
       );
     }
+  }
+
+  async verifyToken(token: string): Promise<DecodedIdToken> {
+    return admin.auth().verifyIdToken(token);
   }
 
   getAuth() {
@@ -62,7 +70,9 @@ export class FirebaseService implements OnModuleInit {
   }
 
   private loadServiceAccountFromJson() {
-    const rawJson = this.configService.get<string>('FIREBASE_SERVICE_ACCOUNT_JSON');
+    const rawJson = this.configService.get<string>(
+      'FIREBASE_SERVICE_ACCOUNT_JSON',
+    );
     const credentialPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
     if (!rawJson && !credentialPath) {

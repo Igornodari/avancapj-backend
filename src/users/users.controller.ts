@@ -6,13 +6,12 @@ import {
   Body,
   UseGuards,
   Request,
-  Param,
 } from '@nestjs/common';
 import { UsersService, UserProfile } from './users.service';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { FirebaseService } from 'src/firebase/firebase.service';
 
 @Controller('users')
-@UseGuards(FirebaseAuthGuard)
+@UseGuards(FirebaseService)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -20,7 +19,6 @@ export class UsersController {
   async getProfile(@Request() req): Promise<UserProfile> {
     const user = await this.usersService.getUserByUid(req.user.uid);
     if (!user) {
-      // Criar usuário se não existir
       return this.usersService.createOrUpdateUser({
         uid: req.user.uid,
         email: req.user.email,

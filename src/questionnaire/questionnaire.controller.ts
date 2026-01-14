@@ -9,16 +9,16 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { QuestionnaireResponse } from './questionnaire.interface';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
 
 @Controller('core/questionnaire')
 export class QuestionnaireController {
-  constructor(private questionnaireService: QuestionnaireService) {}
+  constructor(private questionnaireService: QuestionnaireService) { }
 
   @Get('questions')
   @UseGuards(FirebaseAuthGuard)
-  async getQuestions() {
+  getQuestions() {
     return {
       questions: this.questionnaireService.getQuestions(),
     };
@@ -54,6 +54,12 @@ export class QuestionnaireController {
   @UseGuards(FirebaseAuthGuard)
   async getUserProfile(@Request() req) {
     const userId = req.user.uid;
+
+    if (!userId)
+      throw new HttpException(
+        'Usuário não autenticado',
+        HttpStatus.UNAUTHORIZED,
+      );
     const profile = await this.questionnaireService.getUserProfile(userId);
 
     if (!profile) {
@@ -66,16 +72,19 @@ export class QuestionnaireController {
   @Get('status')
   @UseGuards(FirebaseAuthGuard)
   async getQuestionnaireStatus(@Request() req) {
-    const userId = req.user.uid;
+    const userId = req.user?.uid;
+    if (!userId) {
+      throw new HttpException(
+        'Usuário não autenticado',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     const completed =
       await this.questionnaireService.hasCompletedQuestionnaire(userId);
 
-    return {
-      completed,
-      userId,
-    };
+    return { completed, userId };
   }
-
   @Get('response')
   @UseGuards(FirebaseAuthGuard)
   async getResponse(@Request() req) {

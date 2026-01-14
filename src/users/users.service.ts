@@ -46,7 +46,10 @@ export class UsersService {
     };
 
     if (firestore) {
-      await firestore.collection('users').doc(user.uid).set(user, { merge: true });
+      await firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(user, { merge: true });
     }
 
     // fallback local para ambientes sem Firebase configurado
@@ -85,7 +88,10 @@ export class UsersService {
     };
 
     if (firestore) {
-      await firestore.collection('users').doc(uid).set(updatedUser, { merge: true });
+      await firestore
+        .collection('users')
+        .doc(uid)
+        .set(updatedUser, { merge: true });
     }
 
     this.users.set(uid, updatedUser);

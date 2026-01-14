@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { QuestionnaireController } from './questionnaire.controller';
 import { QuestionnaireService } from './questionnaire.service';
 import { AuthModule } from '../auth/auth.module';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { FirebaseService } from 'src/firebase/firebase.service';
 
 @Module({
   imports: [AuthModule],
   controllers: [QuestionnaireController],
-  providers: [QuestionnaireService, FirebaseAuthGuard],
+  providers: [QuestionnaireService, FirebaseService],
   exports: [QuestionnaireService],
 })
 export class QuestionnaireModule {}

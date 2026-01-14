@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FirebaseService } from '../firebase/firebase.service';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -10,26 +11,33 @@ export class AuthService {
   ) {}
 
   async validateFirebaseToken(token: string) {
+    const firebaseAuth = this.firebaseService.getAuth();
+
+    if (!firebaseAuth) {
+      return {
+        uid: 'test-user-123',
+        email: 'test@example.com',
+        name: 'Usuário de Teste',
+      };
+    }
+
+    // Diagnóstico rápido do formato
+    const parts = token?.split('.')?.length ?? 0;
+    console.log('[auth] token parts:', parts, 'len:', token?.length);
+
+    const decoded = jwt.decode(token, { json: true });
+    console.log('[auth] decoded iss/aud:', decoded?.iss, decoded?.aud);
+
     try {
-      const firebaseAuth = this.firebaseService.getAuth();
-
-      // Se o Firebase não estiver inicializado, simular validação para desenvolvimento
-      if (!firebaseAuth) {
-        return {
-          uid: 'test-user-123',
-          email: 'test@example.com',
-          name: 'Usuário de Teste',
-        };
-      }
-
       const decodedToken = await firebaseAuth.verifyIdToken(token);
       return decodedToken;
-    } catch (error) {
-      throw new Error('Token inválido');
+    } catch (e: any) {
+      console.error('[auth] verifyIdToken error:', e.message, e.code);
+      throw new UnauthorizedException(e?.message ?? 'Token inválido');
     }
   }
 
-  async login(user: any) {
+  login(user: any) {
     const payload = {
       email: user.email,
       sub: user.uid,
@@ -49,7 +57,6 @@ export class AuthService {
   async getUserProfile(uid: string) {
     try {
       const firebaseAuth = this.firebaseService.getAuth();
-      // Se o Firebase não estiver inicializado, retornar dados de teste
       if (!firebaseAuth) {
         return {
           uid: uid,

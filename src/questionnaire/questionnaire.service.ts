@@ -167,8 +167,6 @@ export class QuestionnaireService {
     };
 
     this.responses.set(userId, questionnaireResponse);
-
-    // Processar respostas e gerar perfil do usuário
     const profile = this.generateUserProfile(userId, responses);
     this.userProfiles.set(userId, profile);
 
@@ -189,7 +187,6 @@ export class QuestionnaireService {
       if (!question) return;
 
       if (question.id === 'q1') {
-        // Ramo de atuação
         const option = question.options?.find(
           (opt) => opt.id === response.answer,
         );
@@ -198,7 +195,6 @@ export class QuestionnaireService {
           option.toolsAssociated?.forEach((tool) => toolsSet.add(tool));
         }
       } else if (question.id === 'q2') {
-        // Tamanho da empresa
         const option = question.options?.find(
           (opt) => opt.id === response.answer,
         );
@@ -207,7 +203,6 @@ export class QuestionnaireService {
           option.toolsAssociated?.forEach((tool) => toolsSet.add(tool));
         }
       } else if (question.id === 'q3') {
-        // Necessidades (múltipla escolha)
         const answers = Array.isArray(response.answer)
           ? response.answer
           : [response.answer];
@@ -239,16 +234,16 @@ export class QuestionnaireService {
     };
   }
 
-  async getUserProfile(userId: string): Promise<UserProfile | null> {
+  getUserProfile(userId: string): UserProfile | null {
     return this.userProfiles.get(userId) || null;
   }
 
-  async hasCompletedQuestionnaire(userId: string): Promise<boolean> {
+  hasCompletedQuestionnaire(userId: string): boolean {
     const profile = this.userProfiles.get(userId);
     return profile?.questionnaireCompleted || false;
   }
 
-  async getResponse(userId: string): Promise<QuestionnaireResponse | null> {
+  getResponse(userId: string): QuestionnaireResponse | null {
     return this.responses.get(userId) || null;
   }
 }
