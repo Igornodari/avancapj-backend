@@ -7,18 +7,19 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { FirebaseAuthGuard } from './firebase-auth.guard';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
 
 @Controller('core/auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post()
   async authenticate(@Body() body: { token: string }) {
     const user = await this.authService.validateFirebaseToken(body.token);
-    const loginResult = await this.authService.login(user);
+    const loginResult = this.authService.login(user);
+
     return {
-      accessToken: loginResult.access_token,
+      accessToken: loginResult.accessToken,
       user: loginResult.user,
     };
   }

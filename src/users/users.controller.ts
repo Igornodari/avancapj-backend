@@ -6,10 +6,17 @@ import {
   Body,
   UseGuards,
   Request,
-  Param,
 } from '@nestjs/common';
 import { UsersService, UserProfile } from './users.service';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
+
+interface AuthenticatedRequest {
+  user: {
+    uid: string;
+    email: string;
+    name: string;
+  };
+}
 
 @Controller('users')
 @UseGuards(FirebaseAuthGuard)
@@ -17,10 +24,9 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('profile')
-  async getProfile(@Request() req): Promise<UserProfile> {
+  async getProfile(@Request() req: AuthenticatedRequest): Promise<UserProfile> {
     const user = await this.usersService.getUserByUid(req.user.uid);
     if (!user) {
-      // Criar usuário se não existir
       return this.usersService.createOrUpdateUser({
         uid: req.user.uid,
         email: req.user.email,
@@ -32,7 +38,7 @@ export class UsersController {
 
   @Put('profile')
   async updateProfile(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body()
     updateData: { clientType?: string; workArea?: string; name?: string },
   ): Promise<UserProfile> {
@@ -41,7 +47,7 @@ export class UsersController {
 
   @Post('setup')
   async setupProfile(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() setupData: { clientType: string; workArea: string },
   ): Promise<UserProfile> {
     return this.usersService.updateUserProfile(req.user.uid, setupData);

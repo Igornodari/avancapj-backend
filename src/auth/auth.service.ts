@@ -1,31 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as admin from 'firebase-admin';
+import { FirebaseService } from '../firebase/firebase.service';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private firebaseService: FirebaseService,
+  ) { }
 
   async validateFirebaseToken(token: string) {
-    try {
-      // Se o Firebase não estiver inicializado, simular validação para desenvolvimento
-      if (!admin.apps.length) {
-        // Retornar um usuário de teste para desenvolvimento
-        return {
-          uid: 'test-user-123',
-          email: 'test@example.com',
-          name: 'Usuário de Teste',
-        };
-      }
+    const firebaseAuth = this.firebaseService.getAuth();
 
-      const decodedToken = await admin.auth().verifyIdToken(token);
+    if (!firebaseAuth) {
+      return {
+        uid: 'test-user-123',
+        email: 'test@example.com',
+        name: 'Usuário de Teste',
+      };
+    }
+
+    // Diagnóstico rápido do formato
+    const parts = token?.split('.')?.length ?? 0;
+    console.log('[auth] token parts:', parts, 'len:', token?.length);
+
+    const decoded = jwt.decode(token, { json: true });
+    console.log('[auth] decoded iss/aud:', decoded?.iss, decoded?.aud);
+
+    try {
+      const decodedToken = await firebaseAuth.verifyIdToken(token);
       return decodedToken;
-    } catch (error) {
-      throw new Error('Token inválido');
+    } catch (e: any) {
+      console.error('[auth] verifyIdToken error:', e.message, e.code);
+      throw new UnauthorizedException(e?.message ?? 'Token inválido');
     }
   }
 
-  async login(user: any) {
+  login(user: any) {
     const payload = {
       email: user.email,
       sub: user.uid,
@@ -33,7 +45,7 @@ export class AuthService {
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
       user: {
         uid: user.uid,
         email: user.email,
@@ -44,8 +56,8 @@ export class AuthService {
 
   async getUserProfile(uid: string) {
     try {
-      // Se o Firebase não estiver inicializado, retornar dados de teste
-      if (!admin.apps.length) {
+      const firebaseAuth = this.firebaseService.getAuth();
+      if (!firebaseAuth) {
         return {
           uid: uid,
           email: 'test@example.com',
@@ -54,7 +66,7 @@ export class AuthService {
         };
       }
 
-      const userRecord = await admin.auth().getUser(uid);
+      const userRecord = await firebaseAuth.getUser(uid);
       return {
         uid: userRecord.uid,
         email: userRecord.email,

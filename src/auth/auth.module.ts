@@ -4,14 +4,15 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { FirebaseStrategy } from './firebase.strategy';
+import { FirebaseModule } from '../firebase/firebase.module';
 
 @Module({
   imports: [
+    FirebaseModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const secret =
           configService.get<string>('JWT_SECRET') ||
           'default-secret-key-change-in-production';
@@ -31,7 +32,7 @@ import { FirebaseStrategy } from './firebase.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, FirebaseStrategy],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}
