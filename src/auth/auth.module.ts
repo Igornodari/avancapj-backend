@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -6,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { FirebaseModule } from '../firebase/firebase.module';
-import { FirebaseService } from 'src/firebase/firebase.service';
 
 @Module({
   imports: [
@@ -14,7 +12,7 @@ import { FirebaseService } from 'src/firebase/firebase.service';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const secret =
           configService.get<string>('JWT_SECRET') ||
           'default-secret-key-change-in-production';
@@ -34,7 +32,7 @@ import { FirebaseService } from 'src/firebase/firebase.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, FirebaseService],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}
